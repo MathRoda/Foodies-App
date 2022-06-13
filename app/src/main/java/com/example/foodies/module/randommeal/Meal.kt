@@ -1,7 +1,12 @@
 package com.example.foodies.module.randommeal
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "meal_table")
 data class Meal(
     val dateModified: Any,
+    @PrimaryKey
     val idMeal: String,
     val strArea: String,
     val strCategory: String,
