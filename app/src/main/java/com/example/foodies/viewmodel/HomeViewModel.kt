@@ -1,9 +1,12 @@
 package com.example.foodies.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.foodies.database.MealDatabase
 import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.categorymeal.CategoryList
 import com.example.foodies.module.mostpopular.MostPopularMealList
@@ -11,11 +14,12 @@ import com.example.foodies.module.mostpopular.MostPopularMeal
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
 import com.example.foodies.network.MealApiService
+import com.example.foodies.repository.Repository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     private var _randomMeal = MutableLiveData<Meal>()
     val randomMeal: LiveData<Meal> = _randomMeal
@@ -25,6 +29,15 @@ class HomeViewModel: ViewModel() {
 
     private var _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> = _categories
+
+    val getAllMeals: LiveData<List<Meal>>
+    private val repository: Repository
+
+    init {
+        val mealsDao = MealDatabase.getDatabase(application).dao()
+        repository = Repository(mealsDao)
+        getAllMeals = repository.getAllMeals
+    }
 
 
 
