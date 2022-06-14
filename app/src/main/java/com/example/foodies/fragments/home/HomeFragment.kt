@@ -2,9 +2,12 @@ package com.example.foodies.fragments.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,6 +19,9 @@ import com.example.foodies.activities.MealActivity
 import com.example.foodies.adapters.CategoriesAdapter
 import com.example.foodies.adapters.MostPopularMealAdapter
 import com.example.foodies.databinding.FragmentHomeBinding
+import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_ID
+import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_NAME
+import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_THUMB
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.viewmodel.HomeViewModel
 
@@ -82,9 +88,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeCategories() {
-       viewModel.categories.observe(viewLifecycleOwner, Observer {
-           categoriesAdapter.setData(it)
-       })
+        viewModel.categories.observe(viewLifecycleOwner, Observer {
+            categoriesAdapter.setData(it)
+        })
     }
 
     private fun prepareMostPopularRecyclerview() {

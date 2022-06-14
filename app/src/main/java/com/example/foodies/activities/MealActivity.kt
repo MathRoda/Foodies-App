@@ -2,15 +2,16 @@ package com.example.foodies.activities
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.LifecycleOwner
+import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.example.foodies.R
 import com.example.foodies.databinding.ActivityMealBinding
 import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.viewmodel.MealViewModel
 
 class MealActivity : AppCompatActivity() {
@@ -35,7 +36,17 @@ class MealActivity : AppCompatActivity() {
         viewModel.getMealDetail(mealId)
         observeMealDetails()
         onYoutubeIconClicked()
+        onFavoriteButtonClick()
 
+    }
+
+    private fun onFavoriteButtonClick() {
+        binding.btnFavorite.setOnClickListener {
+            meal?.let { viewModel.insertUpdate(it) }
+            Toast
+                .makeText(this, "You've favored this dish",Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun onYoutubeIconClicked() {
@@ -45,12 +56,14 @@ class MealActivity : AppCompatActivity() {
        }
     }
 
+    private var meal: Meal? = null
     private fun observeMealDetails() {
         viewModel.mealDetail.observe(this){
           binding.tvCategory.text = it!!.strCategory
           binding.tvLocation.text = it.strArea
           binding.tvInstructionsSteps.text = it.strInstructions
-          youtubeLink = it.strYoutube
+          youtubeLink = it.strYoutube!!
+          meal = it
           onResponseCase()
         }
     }
