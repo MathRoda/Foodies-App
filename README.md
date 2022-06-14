@@ -17,4 +17,4 @@
 - uses The [MeallDB](https://www.themealdb.com/api.php) api to get data about food from around the glob.
 - Modern UI/UX design.
 
-## You can download Foodies from here [Download](https://github.com/MathRoda/QR-Creator-App/releases/tag/v1.1.0)
+## You can download Foodies from here [Download](https://github.com/MathRoda/Foodies-App/releases/download/v1.0.0/Foodies.apk)
