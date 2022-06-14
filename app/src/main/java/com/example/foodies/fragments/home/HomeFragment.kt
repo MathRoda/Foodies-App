@@ -19,11 +19,13 @@ import com.example.foodies.activities.MealActivity
 import com.example.foodies.adapters.CategoriesAdapter
 import com.example.foodies.adapters.MostPopularMealAdapter
 import com.example.foodies.databinding.FragmentHomeBinding
+import com.example.foodies.fragments.bottomsheet.MealBottomSheetFragment
 import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_ID
 import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_NAME
 import com.example.foodies.fragments.home.HomeFragment.Companion.MEAL_THUMB
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.viewmodel.HomeViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class HomeFragment : Fragment() {
 
@@ -70,6 +72,15 @@ class HomeFragment : Fragment() {
         observeCategories()
         onCategoryItemClick()
 
+        onPopularItemLongClick()
+
+    }
+
+    private fun onPopularItemLongClick() {
+        adapterMostPopular.onLongMealClick = {
+            val bottomSheet = MealBottomSheetFragment.newInstance(it.idMeal)
+            bottomSheet.show(childFragmentManager, "Meals Info")
+        }
     }
 
     private fun onCategoryItemClick() {
