@@ -33,11 +33,26 @@ class CategoriesFragment : Fragment() {
 
         prepareCategoriesRecyclerView()
 
+        viewModel.getCategories()
+        observeCategories()
+        onCategoryItemClick()
 
         return binding.root
     }
 
+    private fun onCategoryItemClick() {
+        adapterCategories.onItemClick = {
+            val intent = Intent(activity, CategoriesActivity::class.java)
+            intent.putExtra(HomeFragment.CATEGORY_TITLE, it.strCategory)
+            startActivity(intent)
+        }
+    }
 
+    private fun observeCategories() {
+        viewModel.categories.observe(viewLifecycleOwner, Observer {
+            adapterCategories.setData(it)
+        })
+    }
 
     private fun prepareCategoriesRecyclerView() {
        binding.rvCategoriesMeal.apply {
