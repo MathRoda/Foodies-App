@@ -4,13 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.foodies.activities.CategoriesActivity
 import com.example.foodies.databinding.PopularItemBinding
+import com.example.foodies.fragments.categories.CategoriesFragment
+import com.example.foodies.module.categorymeal.Category
+import com.example.foodies.module.categorymeal.CategoryList
 import com.example.foodies.module.mostpopular.MostPopularMeal
 
 class MostPopularMealAdapter: RecyclerView.Adapter<MostPopularMealAdapter.PopularMealViewHolder>() {
 
     private var mealList = emptyList<MostPopularMeal>()
      var onMealClick: ((MostPopularMeal) -> Unit)? = null
+     var onLongMealClick: ((MostPopularMeal) -> Unit)? = null
 
     class PopularMealViewHolder(binding: PopularItemBinding):RecyclerView.ViewHolder(binding.root) {
          private val imageMostPopularMeal = binding.imgPopularMealItem
@@ -37,6 +42,11 @@ class MostPopularMealAdapter: RecyclerView.Adapter<MostPopularMealAdapter.Popula
       holder.itemView.setOnClickListener {
           with(onMealClick) { this!!.invoke(currentItem) }
       }
+
+        holder.itemView.setOnLongClickListener {
+            onLongMealClick?.invoke(currentItem)
+            true
+        }
 
 
     }

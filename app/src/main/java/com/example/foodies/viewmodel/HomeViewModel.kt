@@ -29,6 +29,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     private var _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> = _categories
 
+    private var _bottomSheetMeal = MutableLiveData<Meal>()
+    val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
+
 
     val getAllMeals: LiveData<List<Meal>>
     private val repository: Repository
@@ -86,6 +89,22 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             }
         })
     }
+
+    fun getMealById(id: String) {
+        MealApiService.retrofitInstance.getMealsDetails(id).enqueue(object : Callback<RandomMeal>{
+            override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
+                val meal = response.body()?.meals?.first()
+                meal?.let {
+                    _bottomSheetMeal.postValue(it)
+                }
+            }
+
+            override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
+                Log.e("Error", t.message.toString())
+            }
+        })
+    }
+
 
     fun insertUpdate(meal: Meal) {
         viewModelScope.launch(Dispatchers.IO) {

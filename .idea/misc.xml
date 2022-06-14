@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/drawable/rounded_top_shape.xml" value="0.212" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/font/fonts.xml" value="0.15925925925925927" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/activity_categories.xml" value="0.33" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/activity_main.xml" value="0.25" />
@@ -13,6 +14,7 @@
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/fragment_categories.xml" value="0.25" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/fragment_favorites.xml" value="0.1" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/fragment_meal_bottom_sheet.xml" value="0.25" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/meals_item.xml" value="0.22" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/layout/popular_item.xml" value="0.18" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/Foodies/app/src/main/res/menu/bottom_nav_menu.xml" value="0.5" />
