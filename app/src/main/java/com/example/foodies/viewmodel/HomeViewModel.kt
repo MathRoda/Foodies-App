@@ -2,10 +2,7 @@ package com.example.foodies.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.foodies.database.MealDatabase
 import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.categorymeal.CategoryList
@@ -15,6 +12,8 @@ import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
 import com.example.foodies.network.MealApiService
 import com.example.foodies.repository.Repository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +28,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     private var _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> = _categories
+
 
     val getAllMeals: LiveData<List<Meal>>
     private val repository: Repository
@@ -85,6 +85,18 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
                 Log.e("Error", t.message.toString())
             }
         })
+    }
+
+    fun insertUpdate(meal: Meal) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertUpdate(meal)
+        }
+    }
+
+    fun delete(meal: Meal) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.delete(meal)
+        }
     }
 
 }

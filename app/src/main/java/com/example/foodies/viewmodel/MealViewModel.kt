@@ -48,10 +48,5 @@ class MealViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun delete(meal: Meal) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.delete(meal)
-        }
-    }
 
 }
