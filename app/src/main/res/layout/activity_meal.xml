@@ -139,7 +139,7 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_gravity="bottom|center"
-        android:src="@drawable/ic_youtube"
+        android:src="@drawable/ic_youtube_logo"
         android:layout_marginBottom="@dimen/_10sdp"/>
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressBar"
