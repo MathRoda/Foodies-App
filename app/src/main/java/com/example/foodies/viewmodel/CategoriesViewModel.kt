@@ -18,7 +18,7 @@ class CategoriesViewModel: ViewModel() {
     val meals: LiveData<List<MostPopularMeal>> = _meals
 
     fun getMealsByCategory(category: String) {
-        MealApiService.retrofitInstance.getMealsByCategory(category).enqueue(object : Callback<MostPopularMealList> {
+        MealApiService.retrofitInstance.getPopularItems(category).enqueue(object : Callback<MostPopularMealList> {
             override fun onResponse(
                 call: Call<MostPopularMealList>,
                 response: Response<MostPopularMealList>
