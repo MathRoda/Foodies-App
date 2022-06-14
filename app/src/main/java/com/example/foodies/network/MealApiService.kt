@@ -30,8 +30,8 @@ interface MealsApi {
     @GET("categories.php")
     fun getCategories(): Call<CategoryList>
 
-    @GET("filter.php")
-    fun getMealsByCategory(@Query("c") category: String): Call<MostPopularMealList>
+    @GET("search.php?")
+    fun getMealBySearch(@Query("s") s:String):Call<RandomMeal>
 
 }
 
