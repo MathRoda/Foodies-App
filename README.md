@@ -6,6 +6,9 @@
 ## Screenshots
 <img src="https://github.com/MathRoda/Foodies-App/blob/master/Foodies/screenshots.png" width="1000" />
 
+### Foodies Showcase Video [Youtube]
+[![You](https://img.youtube.com/vi/tILBVEwxTus/0.jpg)](https://www.youtube.com/watch?v=tILBVEwxTus)
+
 ### Features
 - MVVM + LiveData : Android architecture used to saperate logic code from ui.
 - Bottom Navigation : to navigate through fragments.
