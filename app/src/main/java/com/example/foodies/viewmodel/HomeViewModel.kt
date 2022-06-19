@@ -1,27 +1,31 @@
 package com.example.foodies.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.foodies.database.MealDatabase
 import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.categorymeal.CategoryList
-import com.example.foodies.module.mostpopular.MostPopularMealList
 import com.example.foodies.module.mostpopular.MostPopularMeal
+import com.example.foodies.module.mostpopular.MostPopularMealList
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
 import com.example.foodies.network.MealApiService
 import com.example.foodies.repository.Repository
+import com.example.foodies.util.Resources
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class HomeViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: Repository
+): ViewModel() {
 
-    private var _randomMeal = MutableLiveData<Meal>()
-    val randomMeal: LiveData<Meal> = _randomMeal
+    private var _randomMeal = MutableLiveData<Resources<Meal>>()
+    val randomMeal: LiveData<Resources<Meal>> = _randomMeal
 
     private var _mostPopularMeal = MutableLiveData<List<MostPopularMeal>>()
     val mostPopularMeal: LiveData<List<MostPopularMeal>> = _mostPopularMeal
@@ -33,47 +37,40 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
 
 
-    val getAllMeals: LiveData<List<Meal>>
-    private val repository: Repository
-
-    init {
-        val mealsDao = MealDatabase.getDatabase(application).dao()
-        repository = Repository(mealsDao)
-        getAllMeals = repository.getAllMeals
+    /**
+     * handling getRandomMeal request from FoodiesApi interface
+     */
+    fun getRandomMeal() = viewModelScope.launch {
+        try {
+            val response = repository.getRandomMeal()
+            handleRandomMealResponse(response)
+        } catch (e: Exception) {
+            _randomMeal.postValue(Resources.Error(e.message.toString()))
+        }
     }
 
-
-
-
-    fun getRandomMeal() {
-
-            MealApiService.retrofitInstance.getRandomMeal().enqueue(object : Callback<RandomMeal> {
-                override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
-                    response.body()?.let {
-                        val randomMeal: Meal = it.meals[0]
-                        _randomMeal.postValue(randomMeal)
-                    }
-                }
-
-                override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
-                    Log.e("Error", t.message.toString())
-                }
-            })
-        }
-
-    fun getPopularItems() {
-        MealApiService.retrofitInstance.getPopularItems("seafood").enqueue(object : Callback<MostPopularMealList> {
-            override fun onResponse(call: Call<MostPopularMealList>, response: Response<MostPopularMealList>) {
-                response.body()?.let {
-                    _mostPopularMeal.postValue(it.meals)
-                }
+    private fun handleRandomMealResponse(response: Response<RandomMeal>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val randomMeal = it.meals[0]
+                _randomMeal.postValue(Resources.Success(randomMeal))
             }
+        } else
+            _randomMeal.postValue(Resources.Error(response.message()))
 
-            override fun onFailure(call: Call<MostPopularMealList>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
+    }
+
+    fun getPopularItems(category: String) = viewModelScope.launch {
+        try {
+            val response = repository.getPopularItems("seafood")
+            handlePopularItemResponse(response)
+        }catch (e: Exception) {
+            _randomMeal.postValue(Resources.Error(e.message.toString()))
         }
-        )
+    }
+
+    private fun handlePopularItemResponse(response: Response<MostPopularMealList>) {
+
     }
 
     fun getCategories() {

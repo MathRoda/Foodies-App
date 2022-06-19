@@ -2,17 +2,43 @@ package com.example.foodies.repository
 
 import androidx.lifecycle.LiveData
 import com.example.foodies.database.Dao
+import com.example.foodies.database.MealDatabase
+import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.randommeal.Meal
+import com.example.foodies.network.FoodiesApi
 
-class Repository(private val dao: Dao) {
+class Repository(
+    private val foodiesApi: FoodiesApi,
+    mealDatabase: MealDatabase
+) {
 
-    val getAllMeals: LiveData<List<Meal>> = dao.getAllMeals()
+    private val mealDao = mealDatabase.dao()
 
-    suspend fun insertUpdate(meal: Meal){
-        dao.insertUpdate(meal)
-    }
+    // Api Functions
+    suspend fun getRandomMeal() = foodiesApi.getRandomMeal()
 
-    suspend fun delete(meal: Meal){
-        dao.delete(meal)
-    }
+    suspend fun getMealsDetails(
+        id: String
+    ) = foodiesApi.getMealsDetails(id)
+
+    suspend fun getPopularItems(
+        category: String
+    ) = foodiesApi.getPopularItems(category)
+
+    suspend fun getCategories() = foodiesApi.getCategories()
+
+    suspend fun getMealBySearch(
+        s: String
+    ) = foodiesApi.getMealBySearch(s)
+
+    // Database Functions
+    suspend fun insertUpdate(
+        meal: Meal
+    ) = mealDao.insertUpdate(meal)
+
+    suspend fun delete(
+        meal: Meal
+    ) = mealDao.delete(meal)
+
+    fun getAllMeals() = mealDao.getAllMeals()
 }
