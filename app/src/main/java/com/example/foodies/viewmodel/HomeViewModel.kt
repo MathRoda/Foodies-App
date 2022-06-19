@@ -27,14 +27,14 @@ class HomeViewModel @Inject constructor(
     private var _randomMeal = MutableLiveData<Resources<Meal>>()
     val randomMeal: LiveData<Resources<Meal>> = _randomMeal
 
-    private var _mostPopularMeal = MutableLiveData<List<MostPopularMeal>>()
-    val mostPopularMeal: LiveData<List<MostPopularMeal>> = _mostPopularMeal
+    private var _mostPopularMeal = MutableLiveData<Resources<List<MostPopularMeal>>>()
+    val mostPopularMeal: LiveData<Resources<List<MostPopularMeal>>> = _mostPopularMeal
 
-    private var _categories = MutableLiveData<List<Category>>()
-    val categories: LiveData<List<Category>> = _categories
+    private var _categories = MutableLiveData<Resources<List<Category>>>()
+    val categories: LiveData<Resources<List<Category>>> = _categories
 
-    private var _bottomSheetMeal = MutableLiveData<Meal>()
-    val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
+    private var _bottomSheetMeal = MutableLiveData<Resources<Meal>>()
+    val bottomSheetMeal: LiveData<Resources<Meal>> = _bottomSheetMeal
 
 
     /**
@@ -60,6 +60,10 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    /**
+     * handling getPopularItems request from FoodiesApi interface
+     */
+
     fun getPopularItems(category: String) = viewModelScope.launch {
         try {
             val response = repository.getPopularItems("seafood")
@@ -70,36 +74,59 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handlePopularItemResponse(response: Response<MostPopularMealList>) {
-
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val popularItem = it.meals
+                _mostPopularMeal.postValue(Resources.Success(popularItem))
+            }
+        } else
+            _mostPopularMeal.postValue(Resources.Error(response.message()))
     }
 
-    fun getCategories() {
-        MealApiService.retrofitInstance.getCategories().enqueue(object : Callback<CategoryList> {
-            override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
-              response.body()?.let {
-                  _categories.postValue(it.categories)
-              }
-            }
+    /**
+     * handling getCategories request from FoodiesApi interface
+     */
 
-            override fun onFailure(call: Call<CategoryList>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
-        })
+    fun getCategories() = viewModelScope.launch {
+        try {
+            val response = repository.getCategories()
+            handleCategoriesResponse(response)
+
+        } catch (e: Exception) {
+            _categories.postValue(Resources.Error(e.message.toString()))
+        }
     }
 
-    fun getMealById(id: String) {
-        MealApiService.retrofitInstance.getMealsDetails(id).enqueue(object : Callback<RandomMeal>{
-            override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
-                val meal = response.body()?.meals?.first()
-                meal?.let {
-                    _bottomSheetMeal.postValue(it)
-                }
+    private fun handleCategoriesResponse(response: Response<CategoryList>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val category = it.categories
+                _categories.postValue(Resources.Success(category))
             }
+        } else
+            _categories.postValue(Resources.Error(response.message()))
+    }
 
-            override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
-                Log.e("Error", t.message.toString())
+    /**
+     * handling getCategories request from FoodiesApi interface
+     */
+
+    fun getMealById(id: String) = viewModelScope.launch {
+        try {
+            val response = repository.getMealsDetails(id)
+            handleMealByIdResponse(response)
+        } catch (e: Exception) {
+            _bottomSheetMeal.postValue(Resources.Error(e.message.toString()))
+        }
+    }
+
+    private fun handleMealByIdResponse(response: Response<RandomMeal>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val mealId = it.meals
+                _bottomSheetMeal.postValue(Resources.Success(mealId))
             }
-        })
+        }
     }
 
 
