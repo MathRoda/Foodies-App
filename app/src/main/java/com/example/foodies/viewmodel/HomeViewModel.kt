@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(
      * handling getPopularItems request from FoodiesApi interface
      */
 
-    fun getPopularItems(category: String) = viewModelScope.launch {
+    fun getPopularItems() = viewModelScope.launch {
         try {
             val response = repository.getPopularItems("seafood")
             handlePopularItemResponse(response)
@@ -123,12 +123,16 @@ class HomeViewModel @Inject constructor(
     private fun handleMealByIdResponse(response: Response<RandomMeal>) {
         if (response.isSuccessful) {
             response.body()?.let {
-                val mealId = it.meals
+                val mealId = it.meals.first()
                 _bottomSheetMeal.postValue(Resources.Success(mealId))
             }
-        }
+        } else
+            _bottomSheetMeal.postValue(Resources.Error(response.message()))
     }
 
+    /**
+     * handling the Database Functions (Insert&Update / Delete )
+     */
 
     fun insertUpdate(meal: Meal) {
         viewModelScope.launch(Dispatchers.IO) {
