@@ -14,6 +14,7 @@
 - Bottom Navigation : to navigate through fragments.
 - Retrofit + Gson Converter : Fetch news from rest api as a gson file and convert it to a kotlin object.
 - Room : Save your favorite dishes into a local database.
+- Dagger hilt : Dependency injection.
 - Coroutines : Executing code in the background (another thread).
 - Coil : caches images from the api and show them in an imageView.
 - viewBinding : to access the views without needing to infalte them.
