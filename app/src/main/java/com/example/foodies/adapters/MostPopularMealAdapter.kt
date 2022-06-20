@@ -4,11 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.foodies.activities.CategoriesActivity
 import com.example.foodies.databinding.PopularItemBinding
-import com.example.foodies.fragments.categories.CategoriesFragment
-import com.example.foodies.module.categorymeal.Category
-import com.example.foodies.module.categorymeal.CategoryList
 import com.example.foodies.module.mostpopular.MostPopularMeal
 
 class MostPopularMealAdapter: RecyclerView.Adapter<MostPopularMealAdapter.PopularMealViewHolder>() {

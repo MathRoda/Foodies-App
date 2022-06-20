@@ -1,4 +1,4 @@
-package com.example.foodies.network
+package com.example.foodies.data.remote
 
 import com.example.foodies.module.categorymeal.CategoryList
 import com.example.foodies.module.mostpopular.MostPopularMealList

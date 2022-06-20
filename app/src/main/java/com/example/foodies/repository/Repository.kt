@@ -1,11 +1,8 @@
 package com.example.foodies.repository
 
-import androidx.lifecycle.LiveData
-import com.example.foodies.database.Dao
-import com.example.foodies.database.MealDatabase
-import com.example.foodies.module.categorymeal.Category
+import com.example.foodies.data.database.MealDatabase
 import com.example.foodies.module.randommeal.Meal
-import com.example.foodies.network.FoodiesApi
+import com.example.foodies.data.remote.FoodiesApi
 
 class Repository(
     private val foodiesApi: FoodiesApi,

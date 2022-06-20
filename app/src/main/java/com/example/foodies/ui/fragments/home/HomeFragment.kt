@@ -12,15 +12,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.foodies.R
-import com.example.foodies.activities.CategoriesActivity
-import com.example.foodies.activities.MealActivity
 import com.example.foodies.adapters.CategoriesAdapter
 import com.example.foodies.adapters.MostPopularMealAdapter
 import com.example.foodies.databinding.FragmentHomeBinding
-import com.example.foodies.fragments.bottomsheet.MealBottomSheetFragment
 import com.example.foodies.module.randommeal.Meal
+import com.example.foodies.ui.activities.CategoriesActivity
+import com.example.foodies.ui.activities.MealActivity
+import com.example.foodies.ui.dialog.bottomsheet.MealBottomSheetFragment
 import com.example.foodies.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
@@ -54,12 +56,15 @@ class HomeFragment : Fragment() {
         prepareMostPopularRecyclerview()
         prepareCategoriesRecyclerview()
 
+        viewModel.getRandomMeal()
         observeRandomMeal()
         onRandomMealClicked()
 
+        viewModel.getPopularItems()
         observePopularItems()
         onPopularItemClick()
 
+        viewModel.getCategories()
         observeCategories()
         onCategoryItemClick()
 
@@ -112,11 +117,7 @@ class HomeFragment : Fragment() {
 
     private fun onPopularItemClick() {
         adapterMostPopular.onMealClick = {
-            val intent = Intent(activity, MealActivity::class.java)
-            intent.putExtra(MEAL_ID, it.idMeal)
-            intent.putExtra(MEAL_NAME, it.strMeal)
-            intent.putExtra(MEAL_THUMB, it.strMealThumb)
-            startActivity(intent)
+          startMealActivity()
         }
     }
 
@@ -128,11 +129,7 @@ class HomeFragment : Fragment() {
 
     private fun onRandomMealClicked() {
         binding.randomImageFood.setOnClickListener {
-            val intent = Intent(activity, MealActivity::class.java)
-            intent.putExtra(MEAL_ID, randomMeal.idMeal)
-            intent.putExtra(MEAL_NAME, randomMeal.strMeal)
-            intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
-            startActivity(intent)
+            startMealActivity()
         }
     }
 
@@ -141,6 +138,14 @@ class HomeFragment : Fragment() {
            binding.randomImageFood.load(it.strMealThumb)
             this.randomMeal = it
         }
+    }
+
+    private fun startMealActivity() {
+        val intent = Intent(activity, MealActivity::class.java)
+        intent.putExtra(MEAL_ID, randomMeal.idMeal)
+        intent.putExtra(MEAL_NAME, randomMeal.strMeal)
+        intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
+        startActivity(intent)
     }
 
 }

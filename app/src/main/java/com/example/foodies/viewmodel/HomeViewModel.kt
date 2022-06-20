@@ -35,6 +35,8 @@ class HomeViewModel @Inject constructor(
     private var _bottomSheetMeal = MutableLiveData<Meal>()
     val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
 
+    val getAllFavorites = repository.getAllMeals()
+
 
     /**
      * handling getRandomMeal request from FoodiesApi interface

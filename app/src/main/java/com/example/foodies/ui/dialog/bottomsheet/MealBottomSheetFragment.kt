@@ -1,4 +1,4 @@
-package com.example.foodies.fragments.bottomsheet
+package com.example.foodies.ui.dialog.bottomsheet
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,14 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import coil.load
-import com.example.foodies.activities.MealActivity
 import com.example.foodies.databinding.FragmentMealBottomSheetBinding
+import com.example.foodies.ui.activities.MealActivity
 import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.HomeViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val MEAL_ID = "param1"
 
+@AndroidEntryPoint
 class MealBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentMealBottomSheetBinding
     private val viewModel: HomeViewModel by activityViewModels()

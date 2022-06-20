@@ -1,10 +1,10 @@
 package com.example.foodies.di.modules
 
 import android.content.Context
-import com.example.foodies.database.MealDatabase
-import com.example.foodies.network.BASE_URL
-import com.example.foodies.network.FoodiesApi
+import com.example.foodies.data.database.MealDatabase
+import com.example.foodies.data.remote.FoodiesApi
 import com.example.foodies.repository.Repository
+import com.example.foodies.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
