@@ -1,4 +1,4 @@
-package com.example.foodies.activities
+package com.example.foodies.ui.activities
 
 import android.content.Intent
 import android.net.Uri
@@ -10,10 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.example.foodies.R
 import com.example.foodies.databinding.ActivityMealBinding
-import com.example.foodies.fragments.home.HomeFragment
 import com.example.foodies.module.randommeal.Meal
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.MealViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MealActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMealBinding

@@ -1,27 +1,26 @@
-package com.example.foodies.fragments.favorites
+package com.example.foodies.ui.fragments.favorites
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foodies.R
-import com.example.foodies.activities.MealActivity
 import com.example.foodies.adapters.FavoritesMealsAdapter
 import com.example.foodies.databinding.FragmentFavoritesBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.activities.MealActivity
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
     private lateinit var binding: FragmentFavoritesBinding
     private val viewModel: HomeViewModel by viewModels()
@@ -90,8 +89,8 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun observeFavorites() {
-        viewModel.getAllMeals.observe(viewLifecycleOwner, Observer {
+        viewModel.getAllFavorites.observe(viewLifecycleOwner) {
             adapterFavorites.differ.submitList(it)
-        })
+        }
     }
 }

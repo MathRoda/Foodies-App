@@ -1,18 +1,16 @@
-package com.example.foodies.activities
+package com.example.foodies.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.foodies.R
 import com.example.foodies.adapters.MealsCategoriesAdapter
 import com.example.foodies.databinding.ActivityCategoriesBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.CategoriesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoriesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCategoriesBinding
@@ -43,10 +41,10 @@ class CategoriesActivity : AppCompatActivity() {
     }
 
     private fun observeMeals() {
-        viewModel.meals.observe(this, Observer {
+        viewModel.meals.observe(this) {
             binding.tvCategoryMealsCount.text = "$categoryTitle : ${it.size}"
             mealsAdapter.setData(it)
-        })
+        }
     }
 
     private fun getMealInfoFromIntent() {

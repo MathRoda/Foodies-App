@@ -1,22 +1,21 @@
-package com.example.foodies.fragments.categories
+package com.example.foodies.ui.fragments.categories
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.foodies.R
-import com.example.foodies.activities.CategoriesActivity
 import com.example.foodies.adapters.CategoriesAdapter
 import com.example.foodies.databinding.FragmentCategoriesBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.activities.CategoriesActivity
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoriesFragment : Fragment() {
     private lateinit var binding: FragmentCategoriesBinding
     private lateinit var adapterCategories: CategoriesAdapter
@@ -32,7 +31,6 @@ class CategoriesFragment : Fragment() {
 
 
         prepareCategoriesRecyclerView()
-
         viewModel.getCategories()
         observeCategories()
         onCategoryItemClick()
@@ -49,9 +47,9 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun observeCategories() {
-        viewModel.categories.observe(viewLifecycleOwner, Observer {
+        viewModel.categories.observe(viewLifecycleOwner) {
             adapterCategories.setData(it)
-        })
+        }
     }
 
     private fun prepareCategoriesRecyclerView() {

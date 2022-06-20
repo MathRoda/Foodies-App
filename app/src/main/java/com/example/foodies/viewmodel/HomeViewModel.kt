@@ -1,24 +1,27 @@
 package com.example.foodies.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.*
-import com.example.foodies.database.MealDatabase
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.categorymeal.CategoryList
-import com.example.foodies.module.mostpopular.MostPopularMealList
 import com.example.foodies.module.mostpopular.MostPopularMeal
+import com.example.foodies.module.mostpopular.MostPopularMealList
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
-import com.example.foodies.network.MealApiService
 import com.example.foodies.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class HomeViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: Repository
+): ViewModel() {
 
     private var _randomMeal = MutableLiveData<Meal>()
     val randomMeal: LiveData<Meal> = _randomMeal
@@ -32,79 +35,106 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     private var _bottomSheetMeal = MutableLiveData<Meal>()
     val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
 
-
-    val getAllMeals: LiveData<List<Meal>>
-    private val repository: Repository
-
-    init {
-        val mealsDao = MealDatabase.getDatabase(application).dao()
-        repository = Repository(mealsDao)
-        getAllMeals = repository.getAllMeals
-    }
+    val getAllFavorites = repository.getAllMeals()
 
 
-
-
-    fun getRandomMeal() {
-
-            MealApiService.retrofitInstance.getRandomMeal().enqueue(object : Callback<RandomMeal> {
-                override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
-                    response.body()?.let {
-                        val randomMeal: Meal = it.meals[0]
-                        _randomMeal.postValue(randomMeal)
-                    }
-                }
-
-                override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
-                    Log.e("Error", t.message.toString())
-                }
-            })
+    /**
+     * handling getRandomMeal request from FoodiesApi interface
+     */
+    fun getRandomMeal() = viewModelScope.launch {
+        try {
+            val response = repository.getRandomMeal()
+            handleRandomMealResponse(response)
+        } catch (e: Exception) {
+            Log.e("catch", e.message.toString())
         }
+    }
 
-    fun getPopularItems() {
-        MealApiService.retrofitInstance.getPopularItems("seafood").enqueue(object : Callback<MostPopularMealList> {
-            override fun onResponse(call: Call<MostPopularMealList>, response: Response<MostPopularMealList>) {
-                response.body()?.let {
-                    _mostPopularMeal.postValue(it.meals)
-                }
+    private fun handleRandomMealResponse(response: Response<RandomMeal>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val randomMeal = it.meals.first()
+                _randomMeal.postValue(randomMeal)
             }
+        } else
+            Log.e("handling", response.message())
 
-            override fun onFailure(call: Call<MostPopularMealList>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
+    }
+
+    /**
+     * handling getPopularItems request from FoodiesApi interface
+     */
+
+    fun getPopularItems() = viewModelScope.launch {
+        try {
+            val response = repository.getPopularItems("seafood")
+            handlePopularItemResponse(response)
+        }catch (e: Exception) {
+            Log.e("catch", e.message.toString())
         }
-        )
     }
 
-    fun getCategories() {
-        MealApiService.retrofitInstance.getCategories().enqueue(object : Callback<CategoryList> {
-            override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
-              response.body()?.let {
-                  _categories.postValue(it.categories)
-              }
+    private fun handlePopularItemResponse(response: Response<MostPopularMealList>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val popularItem = it.meals
+                _mostPopularMeal.postValue(popularItem)
             }
+        } else
+            Log.e("handling", response.message())
 
-            override fun onFailure(call: Call<CategoryList>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
-        })
     }
 
-    fun getMealById(id: String) {
-        MealApiService.retrofitInstance.getMealsDetails(id).enqueue(object : Callback<RandomMeal>{
-            override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
-                val meal = response.body()?.meals?.first()
-                meal?.let {
-                    _bottomSheetMeal.postValue(it)
-                }
-            }
+    /**
+     * handling getCategories request from FoodiesApi interface
+     */
 
-            override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
-        })
+    fun getCategories() = viewModelScope.launch {
+        try {
+            val response = repository.getCategories()
+            handleCategoriesResponse(response)
+
+        } catch (e: Exception) {
+            Log.e("catch", e.message.toString())
+        }
     }
 
+    private fun handleCategoriesResponse(response: Response<CategoryList>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val category = it.categories
+                _categories.postValue(category)
+            }
+        } else
+            Log.e("handling", response.message())
+    }
+
+    /**
+     * handling getCategories request from FoodiesApi interface
+     */
+
+    fun getMealById(id: String) = viewModelScope.launch {
+        try {
+            val response = repository.getMealsDetails(id)
+            handleMealByIdResponse(response)
+        } catch (e: Exception) {
+            Log.e("catch", e.message.toString())
+        }
+    }
+
+    private fun handleMealByIdResponse(response: Response<RandomMeal>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                val mealId = it.meals.first()
+                _bottomSheetMeal.postValue(mealId)
+            }
+        } else
+            Log.e("handling", response.message())
+    }
+
+    /**
+     * handling the Database Functions (Insert&Update / Delete )
+     */
 
     fun insertUpdate(meal: Meal) {
         viewModelScope.launch(Dispatchers.IO) {

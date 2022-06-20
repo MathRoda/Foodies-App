@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.foodies.databinding.MealsItemBinding
-import com.example.foodies.module.mostpopular.MostPopularMeal
 import com.example.foodies.module.randommeal.Meal
 
 class FavoritesMealsAdapter: RecyclerView.Adapter<FavoritesMealsAdapter.ViewHolder>() {

@@ -1,22 +1,20 @@
-package com.example.foodies
+package com.example.foodies.ui.fragments.search
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import coil.load
-import com.example.foodies.activities.MealActivity
 import com.example.foodies.databinding.FragmentSearchBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.activities.MealActivity
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchViewModel by viewModels()
@@ -52,7 +50,7 @@ class SearchFragment : Fragment() {
     private fun observeSearched() {
         binding.icSearch.setOnClickListener {
             onSearchClick()
-            viewModel.searchedMeal.observe(viewLifecycleOwner, Observer {
+            viewModel.searchedMeal.observe(viewLifecycleOwner) {
                 binding.apply {
                     imgSearchedMeal.load(it.strMealThumb)
                     tvSearchedMeal.text = it.strMeal
@@ -61,7 +59,7 @@ class SearchFragment : Fragment() {
                 mealId = it.idMeal
                 mealStr = it.strMeal!!
                 mealThumb = it.strMealThumb!!
-            })
+            }
         }
     }
 
