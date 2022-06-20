@@ -117,7 +117,11 @@ class HomeFragment : Fragment() {
 
     private fun onPopularItemClick() {
         adapterMostPopular.onMealClick = {
-          startMealActivity()
+            val intent = Intent(activity, MealActivity::class.java)
+            intent.putExtra(MEAL_ID, it.idMeal)
+            intent.putExtra(MEAL_NAME, it.strMeal)
+            intent.putExtra(MEAL_THUMB, it.strMealThumb)
+            startActivity(intent)
         }
     }
 
@@ -129,7 +133,11 @@ class HomeFragment : Fragment() {
 
     private fun onRandomMealClicked() {
         binding.randomImageFood.setOnClickListener {
-            startMealActivity()
+            val intent = Intent(activity, MealActivity::class.java)
+            intent.putExtra(MEAL_ID, randomMeal.idMeal)
+            intent.putExtra(MEAL_NAME, randomMeal.strMeal)
+            intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
+            startActivity(intent)
         }
     }
 
@@ -140,12 +148,5 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun startMealActivity() {
-        val intent = Intent(activity, MealActivity::class.java)
-        intent.putExtra(MEAL_ID, randomMeal.idMeal)
-        intent.putExtra(MEAL_NAME, randomMeal.strMeal)
-        intent.putExtra(MEAL_THUMB, randomMeal.strMealThumb)
-        startActivity(intent)
-    }
 
 }
