@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import coil.load
 import com.example.foodies.activities.MealActivity
 import com.example.foodies.databinding.FragmentMealBottomSheetBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.viewmodel.HomeViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

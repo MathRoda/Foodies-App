@@ -1,21 +1,20 @@
 package com.example.foodies.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.foodies.module.categorymeal.Category
 import com.example.foodies.module.categorymeal.CategoryList
 import com.example.foodies.module.mostpopular.MostPopularMeal
 import com.example.foodies.module.mostpopular.MostPopularMealList
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
-import com.example.foodies.network.MealApiService
 import com.example.foodies.repository.Repository
-import com.example.foodies.util.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -24,17 +23,17 @@ class HomeViewModel @Inject constructor(
     private val repository: Repository
 ): ViewModel() {
 
-    private var _randomMeal = MutableLiveData<Resources<Meal>>()
-    val randomMeal: LiveData<Resources<Meal>> = _randomMeal
+    private var _randomMeal = MutableLiveData<Meal>()
+    val randomMeal: LiveData<Meal> = _randomMeal
 
-    private var _mostPopularMeal = MutableLiveData<Resources<List<MostPopularMeal>>>()
-    val mostPopularMeal: LiveData<Resources<List<MostPopularMeal>>> = _mostPopularMeal
+    private var _mostPopularMeal = MutableLiveData<List<MostPopularMeal>>()
+    val mostPopularMeal: LiveData<List<MostPopularMeal>> = _mostPopularMeal
 
-    private var _categories = MutableLiveData<Resources<List<Category>>>()
-    val categories: LiveData<Resources<List<Category>>> = _categories
+    private var _categories = MutableLiveData<List<Category>>()
+    val categories: LiveData<List<Category>> = _categories
 
-    private var _bottomSheetMeal = MutableLiveData<Resources<Meal>>()
-    val bottomSheetMeal: LiveData<Resources<Meal>> = _bottomSheetMeal
+    private var _bottomSheetMeal = MutableLiveData<Meal>()
+    val bottomSheetMeal: LiveData<Meal> = _bottomSheetMeal
 
 
     /**
@@ -45,18 +44,18 @@ class HomeViewModel @Inject constructor(
             val response = repository.getRandomMeal()
             handleRandomMealResponse(response)
         } catch (e: Exception) {
-            _randomMeal.postValue(Resources.Error(e.message.toString()))
+            Log.e("catch", e.message.toString())
         }
     }
 
     private fun handleRandomMealResponse(response: Response<RandomMeal>) {
         if (response.isSuccessful) {
             response.body()?.let {
-                val randomMeal = it.meals[0]
-                _randomMeal.postValue(Resources.Success(randomMeal))
+                val randomMeal = it.meals.first()
+                _randomMeal.postValue(randomMeal)
             }
         } else
-            _randomMeal.postValue(Resources.Error(response.message()))
+            Log.e("handling", response.message())
 
     }
 
@@ -69,7 +68,7 @@ class HomeViewModel @Inject constructor(
             val response = repository.getPopularItems("seafood")
             handlePopularItemResponse(response)
         }catch (e: Exception) {
-            _randomMeal.postValue(Resources.Error(e.message.toString()))
+            Log.e("catch", e.message.toString())
         }
     }
 
@@ -77,10 +76,11 @@ class HomeViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let {
                 val popularItem = it.meals
-                _mostPopularMeal.postValue(Resources.Success(popularItem))
+                _mostPopularMeal.postValue(popularItem)
             }
         } else
-            _mostPopularMeal.postValue(Resources.Error(response.message()))
+            Log.e("handling", response.message())
+
     }
 
     /**
@@ -93,7 +93,7 @@ class HomeViewModel @Inject constructor(
             handleCategoriesResponse(response)
 
         } catch (e: Exception) {
-            _categories.postValue(Resources.Error(e.message.toString()))
+            Log.e("catch", e.message.toString())
         }
     }
 
@@ -101,10 +101,10 @@ class HomeViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let {
                 val category = it.categories
-                _categories.postValue(Resources.Success(category))
+                _categories.postValue(category)
             }
         } else
-            _categories.postValue(Resources.Error(response.message()))
+            Log.e("handling", response.message())
     }
 
     /**
@@ -116,7 +116,7 @@ class HomeViewModel @Inject constructor(
             val response = repository.getMealsDetails(id)
             handleMealByIdResponse(response)
         } catch (e: Exception) {
-            _bottomSheetMeal.postValue(Resources.Error(e.message.toString()))
+            Log.e("catch", e.message.toString())
         }
     }
 
@@ -124,10 +124,10 @@ class HomeViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let {
                 val mealId = it.meals.first()
-                _bottomSheetMeal.postValue(Resources.Success(mealId))
+                _bottomSheetMeal.postValue(mealId)
             }
         } else
-            _bottomSheetMeal.postValue(Resources.Error(response.message()))
+            Log.e("handling", response.message())
     }
 
     /**

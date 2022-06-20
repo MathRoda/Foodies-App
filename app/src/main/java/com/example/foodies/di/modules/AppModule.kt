@@ -1,5 +1,6 @@
 package com.example.foodies.di.modules
 
+import android.content.Context
 import com.example.foodies.database.MealDatabase
 import com.example.foodies.network.BASE_URL
 import com.example.foodies.network.FoodiesApi
@@ -7,6 +8,7 @@ import com.example.foodies.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,5 +32,11 @@ object AppModule {
         foodiesApi: FoodiesApi,
         mealDatabase: MealDatabase
     ) = Repository(foodiesApi, mealDatabase)
+
+    @Provides
+    @Singleton
+    fun providesFoodiesDatabase(
+        @ApplicationContext context: Context
+    ): MealDatabase = MealDatabase.getDatabase(context)
 
 }

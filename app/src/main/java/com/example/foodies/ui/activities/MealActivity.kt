@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.example.foodies.R
 import com.example.foodies.databinding.ActivityMealBinding
-import com.example.foodies.fragments.home.HomeFragment
+import com.example.foodies.ui.fragments.home.HomeFragment
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.viewmodel.MealViewModel
 
