@@ -6,33 +6,30 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.foodies.module.randommeal.Meal
 import com.example.foodies.module.randommeal.RandomMeal
 import com.example.foodies.network.MealApiService
+import com.example.foodies.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class SearchViewModel: ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val repository: Repository
+)
+    : ViewModel() {
 
     private var _searchedMeal = MutableLiveData<Meal>()
     val searchedMeal: LiveData<Meal> = _searchedMeal
 
 
-    fun getSearchedMeal(search: String, context: Context) {
-        MealApiService.retrofitInstance.getMealBySearch(search).enqueue(object : Callback<RandomMeal> {
-            override fun onResponse(call: Call<RandomMeal>, response: Response<RandomMeal>) {
-               if (response.body()?.meals == null) {
-                   Toast.makeText(context, "No Such Such Dish Found", Toast.LENGTH_SHORT)
-               } else {
-                   _searchedMeal.value = response.body()!!.meals.first()
-               }
-            }
+    fun getSearchedMeal(search: String, context: Context)  = viewModelScope.launch {
 
-            override fun onFailure(call: Call<RandomMeal>, t: Throwable) {
-                Log.e("TAG", t.message.toString())
-            }
-
-        })
     }
+
 }

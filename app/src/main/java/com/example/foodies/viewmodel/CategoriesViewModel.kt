@@ -26,6 +26,20 @@ class CategoriesViewModel @Inject constructor(
     val meals: LiveData<List<MostPopularMeal>> = _meals
 
     fun getMealsByCategory(category: String)  = viewModelScope.launch {
-        val response = repository.get()
+        try {
+            val response = repository.getPopularItems(category)
+            handleMealByCategoryResponse(response)
+        } catch (e: Exception) {
+            Log.e("catch", e.message.toString())
+        }
+    }
+
+    private fun handleMealByCategoryResponse(response: Response<MostPopularMealList>) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                _meals.postValue(it.meals)
+            }
+        } else
+            Log.d("response", response.message())
     }
 }
